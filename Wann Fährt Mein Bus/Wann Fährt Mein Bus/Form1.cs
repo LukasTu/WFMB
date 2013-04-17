@@ -116,9 +116,9 @@ namespace Wann_Fährt_Mein_Bus
 
                 foreach (string depTime in stop.depTimes)
                 {
-                    txt_ausgabe.Text += UnixTimeConverter(Convert.ToInt64(depTime)) + Environment.NewLine;
+                    txt_ausgabe.Text += UnixTimeConverter(Convert.ToInt64(depTime)).AddHours(-7) + Environment.NewLine;
                 }
-                stop.depTimes.Clear();
+                stop.depTimes.Clear(); //Liste mit den Abfahrtszeiten leeren
             }
             ///////Testende
         }
