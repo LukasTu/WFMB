@@ -21,7 +21,7 @@ namespace Wann_Fährt_Mein_Bus
             public string richtung;
             public string code;
             public string text;
-            public List<string> depTimes = new List<string>();
+            public List<long> depTimes = new List<long>();
         }
 
         HttpWebRequest request; //Einmalige Definition des HTTP-Requests beim Aufruf der Anwendung
@@ -50,12 +50,12 @@ namespace Wann_Fährt_Mein_Bus
                 }
 
                 int temp_LastDepPos = 0;
-                string temp_DepTime;
+                long temp_DepTime;
 
                 for (int i = 0; i < 5; i++) //Schleife zum Einlesen der Abfahrtszeiten
                 {
-                    temp_DepTime = str_response.Substring(str_response.IndexOf("<departureTime>", temp_LastDepPos) + 15, str_response.IndexOf("</departureTime>", temp_LastDepPos + 16) - (str_response.IndexOf("<departureTime>", temp_LastDepPos) + 15 ));
-                    if (Convert.ToInt64(temp_DepTime) > (DateTime.Now - new DateTime(1970, 1, 1)).TotalMilliseconds) //Prüfen, ob die Abfahrtszeit veraltet ist
+                    temp_DepTime = Convert.ToInt64(str_response.Substring(str_response.IndexOf("<departureTime>", temp_LastDepPos) + 15, str_response.IndexOf("</departureTime>", temp_LastDepPos + 16) - (str_response.IndexOf("<departureTime>", temp_LastDepPos) + 15 )));
+                    if (temp_DepTime > (DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalMilliseconds) //Prüfen, ob die Abfahrtszeit veraltet ist
                     {
                         stop.depTimes.Add(temp_DepTime); //Abfahrtszeiten werden in einer Liste gespeichert
                     }
@@ -74,6 +74,11 @@ namespace Wann_Fährt_Mein_Bus
 	        return (new DateTime(1970, 1, 1, 0, 0, 0)).AddMilliseconds(UnixTime);
 	    }
 
+        public Int16 MinutesToDeparture(long depTime)
+        {
+            return Convert.ToInt16((depTime - (DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalMilliseconds) / 1000 / 60);
+        }
+
         public WFMB_Form()
         {
             InitializeComponent();
@@ -87,6 +92,8 @@ namespace Wann_Fährt_Mein_Bus
             lbl_fahrtrichtung.Text = "";
             txt_ausgabe.Clear();
             txt_ausgabe.Update();
+
+            lbl_currentTime.Text = String.Format("{0:dd.MM.yyyy}", DateTime.UtcNow.AddHours(-7)) + " / " + String.Format("{0:HH:mm}", DateTime.UtcNow.AddHours(-7));
 
             stop.id = txt_stopID.Text; //Ablegen der durch den Benutzer eingegebenen ID
 
@@ -114,9 +121,9 @@ namespace Wann_Fährt_Mein_Bus
                 lbl_fahrtrichtung.Text = stop.richtung; //Ausgabe der Fahrtrichtung
                 lbl_route.Text = stop.route; //Ausgabe der Route
 
-                foreach (string depTime in stop.depTimes)
+                foreach (long depTime in stop.depTimes)
                 {
-                    txt_ausgabe.Text += UnixTimeConverter(Convert.ToInt64(depTime)).AddHours(-7) + Environment.NewLine;
+                    txt_ausgabe.Text += String.Format("{0:HH:mm}", UnixTimeConverter(depTime).AddHours(-7)) + "    (noch " + MinutesToDeparture(depTime) + " Minuten)" + Environment.NewLine;
                 }
                 stop.depTimes.Clear(); //Liste mit den Abfahrtszeiten leeren
             }

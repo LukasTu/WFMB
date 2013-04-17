@@ -40,6 +40,8 @@
             this.lbl_fahrtrichtung = new System.Windows.Forms.Label();
             this.btn_getInfo = new System.Windows.Forms.Button();
             this.txt_ausgabe = new System.Windows.Forms.TextBox();
+            this.lbl_currentTime = new System.Windows.Forms.Label();
+            this.fix_label_cuurentTime = new System.Windows.Forms.Label();
             this.menuBar.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -97,7 +99,7 @@
             // 
             this.fix_label_route.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.fix_label_route.AutoSize = true;
-            this.fix_label_route.Location = new System.Drawing.Point(325, 31);
+            this.fix_label_route.Location = new System.Drawing.Point(418, 31);
             this.fix_label_route.Name = "fix_label_route";
             this.fix_label_route.Size = new System.Drawing.Size(39, 13);
             this.fix_label_route.TabIndex = 5;
@@ -107,7 +109,7 @@
             // 
             this.lbl_route.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.lbl_route.AutoSize = true;
-            this.lbl_route.Location = new System.Drawing.Point(370, 31);
+            this.lbl_route.Location = new System.Drawing.Point(463, 31);
             this.lbl_route.Name = "lbl_route";
             this.lbl_route.Size = new System.Drawing.Size(0, 13);
             this.lbl_route.TabIndex = 6;
@@ -116,7 +118,7 @@
             // 
             this.fix_label_fahrtrichtung.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.fix_label_fahrtrichtung.AutoSize = true;
-            this.fix_label_fahrtrichtung.Location = new System.Drawing.Point(325, 61);
+            this.fix_label_fahrtrichtung.Location = new System.Drawing.Point(418, 61);
             this.fix_label_fahrtrichtung.Name = "fix_label_fahrtrichtung";
             this.fix_label_fahrtrichtung.Size = new System.Drawing.Size(72, 13);
             this.fix_label_fahrtrichtung.TabIndex = 7;
@@ -126,7 +128,7 @@
             // 
             this.lbl_fahrtrichtung.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.lbl_fahrtrichtung.AutoSize = true;
-            this.lbl_fahrtrichtung.Location = new System.Drawing.Point(403, 61);
+            this.lbl_fahrtrichtung.Location = new System.Drawing.Point(496, 61);
             this.lbl_fahrtrichtung.Name = "lbl_fahrtrichtung";
             this.lbl_fahrtrichtung.Size = new System.Drawing.Size(0, 13);
             this.lbl_fahrtrichtung.TabIndex = 8;
@@ -157,11 +159,30 @@
             this.txt_ausgabe.Size = new System.Drawing.Size(669, 164);
             this.txt_ausgabe.TabIndex = 10;
             // 
+            // lbl_currentTime
+            // 
+            this.lbl_currentTime.AutoSize = true;
+            this.lbl_currentTime.Location = new System.Drawing.Point(282, 31);
+            this.lbl_currentTime.Name = "lbl_currentTime";
+            this.lbl_currentTime.Size = new System.Drawing.Size(0, 13);
+            this.lbl_currentTime.TabIndex = 11;
+            // 
+            // fix_label_cuurentTime
+            // 
+            this.fix_label_cuurentTime.AutoSize = true;
+            this.fix_label_cuurentTime.Location = new System.Drawing.Point(171, 31);
+            this.fix_label_cuurentTime.Name = "fix_label_cuurentTime";
+            this.fix_label_cuurentTime.Size = new System.Drawing.Size(105, 13);
+            this.fix_label_cuurentTime.TabIndex = 12;
+            this.fix_label_cuurentTime.Text = "Datum / Zeit vor Ort:";
+            // 
             // WFMB_Form
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(693, 284);
+            this.Controls.Add(this.fix_label_cuurentTime);
+            this.Controls.Add(this.lbl_currentTime);
             this.Controls.Add(this.txt_ausgabe);
             this.Controls.Add(this.btn_getInfo);
             this.Controls.Add(this.lbl_fahrtrichtung);
@@ -199,6 +220,8 @@
         private System.Windows.Forms.Label lbl_fahrtrichtung;
         private System.Windows.Forms.Button btn_getInfo;
         private System.Windows.Forms.TextBox txt_ausgabe;
+        private System.Windows.Forms.Label lbl_currentTime;
+        private System.Windows.Forms.Label fix_label_cuurentTime;
     }
 }
 
