@@ -93,7 +93,7 @@ namespace Wann_Fährt_Mein_Bus
             txt_ausgabe.Clear();
             txt_ausgabe.Update();
 
-            lbl_currentTime.Text = String.Format("{0:dd.MM.yyyy}", DateTime.UtcNow.AddHours(-7)) + " / " + String.Format("{0:HH:mm}", DateTime.UtcNow.AddHours(-7));
+            lbl_currentTime.Text = String.Format("{0:dd.MM.yyyy}", DateTime.UtcNow.AddHours(-7)) + " / " + String.Format("{0:HH:mm}", DateTime.UtcNow.AddHours(-7)); //Ausgabe der aktuellen Zeit
 
             stop.id = txt_stopID.Text; //Ablegen der durch den Benutzer eingegebenen ID
 
