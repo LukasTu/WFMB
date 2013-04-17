@@ -54,16 +54,16 @@ namespace Wann_Fährt_Mein_Bus
 
                 for (int i = 0; i < 5; i++) //Schleife zum Einlesen der Abfahrtszeiten
                 {
-                    temp_DepTime = Convert.ToInt64(str_response.Substring(str_response.IndexOf("<departureTime>", temp_LastDepPos) + 15, str_response.IndexOf("</departureTime>", temp_LastDepPos + 16) - (str_response.IndexOf("<departureTime>", temp_LastDepPos) + 15 )));
+                    temp_DepTime = Convert.ToInt64(str_response.Substring(str_response.IndexOf("<departureTime>", temp_LastDepPos) + 15, str_response.IndexOf("</departureTime>", temp_LastDepPos + 16) - (str_response.IndexOf("<departureTime>", temp_LastDepPos) + 15))); //Die Abfahrtszeiten befinden sich in <departureTime /> Tags und sind im Unix-Millisekunden-Vormat angegeben
                     if (temp_DepTime > (DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalMilliseconds) //Prüfen, ob die Abfahrtszeit veraltet ist
                     {
                         stop.depTimes.Add(temp_DepTime); //Abfahrtszeiten werden in einer Liste gespeichert
                     }
                     else
                     {
-                        i--;
+                        i--;  //Wenn die Abfahrtszeit schon vergangen ist, wird der Zähler der Schleife um 1 zurückgesetzt, um trotzdem die gewünschte Anzahl an Abfahrtszeiten zu erhalten
                     }
-                    temp_LastDepPos = str_response.IndexOf("</departureTime>", temp_LastDepPos + 16);
+                    temp_LastDepPos = str_response.IndexOf("</departureTime>", temp_LastDepPos + 16); //Bestimmung der Position der zuletzt eingelesenen Abfahrtszeit
                 }
             }
 
@@ -74,9 +74,9 @@ namespace Wann_Fährt_Mein_Bus
 	        return (new DateTime(1970, 1, 1, 0, 0, 0)).AddMilliseconds(UnixTime);
 	    }
 
-        public Int16 MinutesToDeparture(long depTime)
+        public Int16 MinutesToDeparture(long depTime) //Funktion zur Bestimmung der Zeit bis zur Abfahrt
         {
-            return Convert.ToInt16((depTime - (DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalMilliseconds) / 1000 / 60);
+            return Convert.ToInt16((depTime - (DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalMilliseconds) / 1000 / 60); //Die Differenz von aktueller Zeit zu Abfahrtszeit wird von Millisekunden in Minuten umgerechnet
         }
 
         public WFMB_Form()
@@ -121,9 +121,9 @@ namespace Wann_Fährt_Mein_Bus
                 lbl_fahrtrichtung.Text = stop.richtung; //Ausgabe der Fahrtrichtung
                 lbl_route.Text = stop.route; //Ausgabe der Route
 
-                foreach (long depTime in stop.depTimes)
+                foreach (long depTime in stop.depTimes) //Jede Abfahrtszeit in der Liste der Abfahrtszeiten...
                 {
-                    txt_ausgabe.Text += String.Format("{0:HH:mm}", UnixTimeConverter(depTime).AddHours(-7)) + "    (noch " + MinutesToDeparture(depTime) + " Minuten)" + Environment.NewLine;
+                    txt_ausgabe.Text += String.Format("{0:HH:mm}", UnixTimeConverter(depTime).AddHours(-7)) + "    (noch " + MinutesToDeparture(depTime) + " Minuten)" + Environment.NewLine; //...und die verbleibende Zeit bis zur Abfahrt wird ausgegeben
                 }
                 stop.depTimes.Clear(); //Liste mit den Abfahrtszeiten leeren
             }
