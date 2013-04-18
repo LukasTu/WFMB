@@ -28,9 +28,11 @@ namespace Wann_Fährt_Mein_Bus
         HttpWebResponse response; //Einmalige Definition der HTTP-Respnse beim Aufruf der Anwendung
 
         Stop stop = new Stop(); //Erstellen eines Objektes der Klasse Stop
+        string str_routenID;
 
-        public void getStopInfo(Stop stop, string str_response) //Methode zum Auswerten der HTTP-Response
+        public void getStopInfo(Stop stop, string routenID, string str_response) //Methode zum Auswerten der HTTP-Response
         {
+            bool faultless = true;
             stop.code = str_response.Substring(str_response.IndexOf("<code>") + 6, 3); //Im Antwort-String das Elemet <code> suchen und dessen Wert in eine Variable speichern
             if (stop.code != "200") //Abfrage, ob der Wert von <code> NICHT 200 ist
             {
@@ -39,31 +41,50 @@ namespace Wann_Fährt_Mein_Bus
             else //Wenn der Wert von <code> 200 ist, war die Abfrage erfolgreich und die Antwort kann ausgewertet werden
             {
                 stop.name = str_response.Substring(str_response.IndexOf("<name>", str_response.IndexOf("<stop>")) + 6, str_response.IndexOf("</name>", str_response.IndexOf("<stop>")) - (str_response.IndexOf("<name>", str_response.IndexOf("<stop>")) + 6)).Replace("amp;", "&"); //Auslesen des Stopnamen
-                stop.richtung = str_response.Substring(str_response.IndexOf("<direction>", str_response.IndexOf("<stop>")) + 11, str_response.IndexOf("</direction>", str_response.IndexOf("<stop>")) - (str_response.IndexOf("<direction>", str_response.IndexOf("<direction>")) + 11)).Replace("N", "Norden").Replace("S", "Süden").Replace("W", "Westen").Replace("E", "Osten"); //Auslesen der Fahrtrichtung
+                stop.richtung = str_response.Substring(str_response.IndexOf("<direction>", str_response.IndexOf("<stop>")) + 11, str_response.IndexOf("</direction>", str_response.IndexOf("<stop>")) - (str_response.IndexOf("<direction>", str_response.IndexOf("<direction>")) + 11)).Replace("NE", "north-eastbound").Replace("NW", "north-westbound").Replace("SE", "south-eastbound").Replace("SW", "south-westbound").Replace("N", "northbound").Replace("S", "southbound").Replace("W", "westbound").Replace("E", "eastbound"); //Auslesen der Fahrtrichtung
                 try
                 {
-                    stop.route = str_response.Substring(str_response.IndexOf("<description>", str_response.IndexOf("<route>")) + 13, str_response.IndexOf("</description>", str_response.IndexOf("<route>")) - (str_response.IndexOf("<description>", str_response.IndexOf("<route>")) + 13)).Replace("amp;", "&"); //Auslesen der Route, wenn sie unter <direction> angegeben ist
+                    stop.route = str_response.Substring(str_response.IndexOf("<description>", str_response.IndexOf("<id>" + routenID + "</id>")) + 13, str_response.IndexOf("</description>", str_response.IndexOf("<id>" + routenID + "</id>")) - (str_response.IndexOf("<description>", str_response.IndexOf("<id>" + routenID + "</id>")) + 13)).Replace("amp;", "&"); //Auslesen der Route, wenn sie unter <direction> angegeben ist
                 }
                 catch (ArgumentOutOfRangeException)
                 {
-                    stop.route = str_response.Substring(str_response.IndexOf("<longName>", str_response.IndexOf("<route>")) + 10, str_response.IndexOf("</longName>", str_response.IndexOf("<route>")) - (str_response.IndexOf("<longName>", str_response.IndexOf("<route>")) + 10)).Replace("amp;", "&"); //Auslesen der Route, wenn sie unter <longName> angegeben ist
+                    try
+                    {
+                        stop.route = str_response.Substring(str_response.IndexOf("<longName>", str_response.IndexOf("<id>" + routenID + "</id>")) + 10, str_response.IndexOf("</longName>", str_response.IndexOf("<id>" + routenID + "</id>")) - (str_response.IndexOf("<longName>", str_response.IndexOf("<id>" + routenID + "</id>")) + 10)).Replace("amp;", "&"); //Auslesen der Route, wenn sie unter <longName> angegeben ist
+                    }
+                    catch (ArgumentOutOfRangeException)
+                    {
+                        txt_ausgabe.Text = "Error!" + Environment.NewLine + "Invalid rout ID.";
+                        stop.route = "";
+                        faultless = false;
+                    }
                 }
 
-                int temp_LastDepPos = 0;
-                long temp_DepTime;
-
-                for (int i = 0; i < 5; i++) //Schleife zum Einlesen der Abfahrtszeiten
+                if (faultless == true)
                 {
-                    temp_DepTime = Convert.ToInt64(str_response.Substring(str_response.IndexOf("<departureTime>", temp_LastDepPos) + 15, str_response.IndexOf("</departureTime>", temp_LastDepPos + 16) - (str_response.IndexOf("<departureTime>", temp_LastDepPos) + 15))); //Die Abfahrtszeiten befinden sich in <departureTime /> Tags und sind im Unix-Millisekunden-Vormat angegeben
-                    if (temp_DepTime > (DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalMilliseconds) //Prüfen, ob die Abfahrtszeit veraltet ist
+                    int temp_LastDepPos = str_response.IndexOf("<routeId>" + routenID + "</routeId>");
+                    long temp_DepTime;
+
+                    for (int i = 0; i < 5; i++) //Schleife zum Einlesen der Abfahrtszeiten
                     {
-                        stop.depTimes.Add(temp_DepTime); //Abfahrtszeiten werden in einer Liste gespeichert
+                        try
+                        {
+                            temp_DepTime = Convert.ToInt64(str_response.Substring(str_response.IndexOf("<departureTime>", temp_LastDepPos) + 15, str_response.IndexOf("</departureTime>", temp_LastDepPos + 16) - (str_response.IndexOf("<departureTime>", temp_LastDepPos) + 15))); //Die Abfahrtszeiten befinden sich in <departureTime /> Tags und sind im Unix-Millisekunden-Vormat angegeben
+                            if (temp_DepTime > (DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalMilliseconds) //Prüfen, ob die Abfahrtszeit veraltet ist
+                            {
+                                stop.depTimes.Add(temp_DepTime); //Abfahrtszeiten werden in einer Liste gespeichert
+                            }
+                            else
+                            {
+                                i--;  //Wenn die Abfahrtszeit schon vergangen ist, wird der Zähler der Schleife um 1 zurückgesetzt, um trotzdem die gewünschte Anzahl an Abfahrtszeiten zu erhalten
+                            }
+                            temp_LastDepPos = str_response.IndexOf("</departureTime>", temp_LastDepPos + 16); //Bestimmung der Position der zuletzt eingelesenen Abfahrtszeit
+                        }
+                        catch (ArgumentOutOfRangeException)
+                        {
+                            break;
+                        }
                     }
-                    else
-                    {
-                        i--;  //Wenn die Abfahrtszeit schon vergangen ist, wird der Zähler der Schleife um 1 zurückgesetzt, um trotzdem die gewünschte Anzahl an Abfahrtszeiten zu erhalten
-                    }
-                    temp_LastDepPos = str_response.IndexOf("</departureTime>", temp_LastDepPos + 16); //Bestimmung der Position der zuletzt eingelesenen Abfahrtszeit
                 }
             }
 
@@ -95,7 +116,8 @@ namespace Wann_Fährt_Mein_Bus
 
             lbl_currentTime.Text = String.Format("{0:dd.MM.yyyy}", DateTime.UtcNow.AddHours(-7)) + " / " + String.Format("{0:HH:mm}", DateTime.UtcNow.AddHours(-7)); //Ausgabe der aktuellen Zeit
 
-            stop.id = txt_stopID.Text; //Ablegen der durch den Benutzer eingegebenen ID
+            stop.id = txt_stopID.Text; //Ablegen der durch den Benutzer eingegebenen Stop ID
+            str_routenID = txt_routenID.Text; 
 
             request = (HttpWebRequest)WebRequest.Create("http://api.onebusaway.org/api/where/schedule-for-stop/" + stop.id + ".xml?key=TEST"); //Erstellen des HTTP-Requests
             response = (HttpWebResponse)request.GetResponse(); //Ablage für die Antwort auf den HTTP-Request
@@ -106,13 +128,13 @@ namespace Wann_Fährt_Mein_Bus
             responseTranslator.Close(); //Streamreader schließen
             responeStream.Close(); //Stream schließen
 
-            getStopInfo(stop, str_response);
+            getStopInfo(stop, str_routenID, str_response);
 
 
             ///////Test
             if (stop.code != "200")
             {
-                txt_ausgabe.Text = "Fehler!" + Environment.NewLine + "Code: " + stop.code + Environment.NewLine; //Wenn der Wert von <code> nicht 200 ist, soll er ausgegeben werden
+                txt_ausgabe.Text = "Error!" + Environment.NewLine + "Code: " + stop.code + Environment.NewLine; //Wenn der Wert von <code> nicht 200 ist, soll er ausgegeben werden
                 txt_ausgabe.Text += "\"" + stop.text + "\"";//Das Element <text> enthält eine kleine Fehlermeldung zu dem code
             }
             else
@@ -121,9 +143,17 @@ namespace Wann_Fährt_Mein_Bus
                 lbl_fahrtrichtung.Text = stop.richtung; //Ausgabe der Fahrtrichtung
                 lbl_route.Text = stop.route; //Ausgabe der Route
 
-                foreach (long depTime in stop.depTimes) //Jede Abfahrtszeit in der Liste der Abfahrtszeiten...
+                foreach (long depTime in stop.depTimes) 
                 {
-                    txt_ausgabe.Text += String.Format("{0:HH:mm}", UnixTimeConverter(depTime).AddHours(-7)) + "    (noch " + MinutesToDeparture(depTime) + " Minuten)" + Environment.NewLine; //...und die verbleibende Zeit bis zur Abfahrt wird ausgegeben
+                    txt_ausgabe.Text += String.Format("{0:HH:mm}", UnixTimeConverter(depTime).AddHours(-7)); //Jede Abfahrtszeit in der Liste der Abfahrtszeiten wird augegeben
+                    if (MinutesToDeparture(depTime) < 60)
+                    {
+                        txt_ausgabe.Text += "    (in " + MinutesToDeparture(depTime) + " minutes)" + Environment.NewLine; //Und gegebenenfalls auch die Zeit bis zur Abfahrt in Minuten (wenn < 60)
+                    }
+                    else
+                    {
+                        txt_ausgabe.Text += Environment.NewLine;
+                    }
                 }
                 stop.depTimes.Clear(); //Liste mit den Abfahrtszeiten leeren
             }
