@@ -130,8 +130,6 @@ namespace Wann_Fährt_Mein_Bus
 
             getStopInfo(stop, str_routenID, str_response);
 
-
-            ///////Test
             if (stop.code != "200")
             {
                 txt_ausgabe.Text = "Error!" + Environment.NewLine + "Code: " + stop.code + Environment.NewLine; //Wenn der Wert von <code> nicht 200 ist, soll er ausgegeben werden
@@ -157,7 +155,6 @@ namespace Wann_Fährt_Mein_Bus
                 }
                 stop.depTimes.Clear(); //Liste mit den Abfahrtszeiten leeren
             }
-            ///////Testende
         }
 
         private void txt_stopID_TextChanged(object sender, EventArgs e) //Text-Changed-Event für das Textfeld, in dem der Benutzer die ID des Stops angibt
@@ -172,6 +169,12 @@ namespace Wann_Fährt_Mein_Bus
         private void WFMB_Form_Load(object sender, EventArgs e)
         {
 
+        }
+
+        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            AboutBox1 aboutBox = new AboutBox1();
+            aboutBox.ShowDialog();
         }
     }
 }

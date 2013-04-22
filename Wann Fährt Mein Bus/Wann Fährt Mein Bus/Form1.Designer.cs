@@ -44,6 +44,7 @@
             this.fix_label_cuurentTime = new System.Windows.Forms.Label();
             this.fix_label_routenID = new System.Windows.Forms.Label();
             this.txt_routenID = new System.Windows.Forms.TextBox();
+            this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuBar.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -59,6 +60,8 @@
             // 
             // dateiToolStripMenuItem
             // 
+            this.dateiToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.aboutToolStripMenuItem});
             this.dateiToolStripMenuItem.Name = "dateiToolStripMenuItem";
             this.dateiToolStripMenuItem.Size = new System.Drawing.Size(40, 20);
             this.dateiToolStripMenuItem.Text = "Info";
@@ -202,6 +205,13 @@
             this.txt_routenID.Size = new System.Drawing.Size(100, 20);
             this.txt_routenID.TabIndex = 14;
             // 
+            // aboutToolStripMenuItem
+            // 
+            this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.aboutToolStripMenuItem.Text = "About...";
+            this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
+            // 
             // WFMB_Form
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -225,7 +235,7 @@
             this.MainMenuStrip = this.menuBar;
             this.MinimumSize = new System.Drawing.Size(709, 320);
             this.Name = "WFMB_Form";
-            this.Text = "Wann fährt mein Bus?";
+            this.Text = "When does my bus departure?";
             this.Load += new System.EventHandler(this.WFMB_Form_Load);
             this.menuBar.ResumeLayout(false);
             this.menuBar.PerformLayout();
@@ -252,6 +262,7 @@
         private System.Windows.Forms.Label fix_label_cuurentTime;
         private System.Windows.Forms.Label fix_label_routenID;
         private System.Windows.Forms.TextBox txt_routenID;
+        private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
     }
 }
 

@@ -6,3 +6,12 @@ C:\Users\tal\Documents\Visual Studio 2008\Projects\Wann Fährt Mein Bus\Wann Fä
 C:\Users\tal\Documents\Visual Studio 2008\Projects\Wann Fährt Mein Bus\Wann Fährt Mein Bus\obj\Debug\Wann Fährt Mein Bus.exe
 C:\Users\tal\Documents\Visual Studio 2008\Projects\Wann Fährt Mein Bus\Wann Fährt Mein Bus\obj\Debug\Wann Fährt Mein Bus.pdb
 C:\Users\tal\Documents\Visual Studio 2008\Projects\Wann Fährt Mein Bus\Wann Fährt Mein Bus\obj\Debug\Wann_Fährt_Mein_Bus.WFMB_Form.resources
+C:\Users\tal\WFMB\Wann Fährt Mein Bus\Wann Fährt Mein Bus\obj\Debug\Wann Fährt Mein Bus.exe
+C:\Users\tal\WFMB\Wann Fährt Mein Bus\Wann Fährt Mein Bus\bin\Debug\Wann Fährt Mein Bus.exe
+C:\Users\tal\WFMB\Wann Fährt Mein Bus\Wann Fährt Mein Bus\bin\Debug\Wann Fährt Mein Bus.pdb
+C:\Users\tal\WFMB\Wann Fährt Mein Bus\Wann Fährt Mein Bus\obj\Debug\ResolveAssemblyReference.cache
+C:\Users\tal\WFMB\Wann Fährt Mein Bus\Wann Fährt Mein Bus\obj\Debug\Wann_Fährt_Mein_Bus.WFMB_Form.resources
+C:\Users\tal\WFMB\Wann Fährt Mein Bus\Wann Fährt Mein Bus\obj\Debug\Wann_Fährt_Mein_Bus.Properties.Resources.resources
+C:\Users\tal\WFMB\Wann Fährt Mein Bus\Wann Fährt Mein Bus\obj\Debug\Wann Fährt Mein Bus.csproj.GenerateResource.Cache
+C:\Users\tal\WFMB\Wann Fährt Mein Bus\Wann Fährt Mein Bus\obj\Debug\Wann Fährt Mein Bus.pdb
+C:\Users\tal\WFMB\Wann Fährt Mein Bus\Wann Fährt Mein Bus\obj\Debug\Wann_Fährt_Mein_Bus.AboutBox1.resources
